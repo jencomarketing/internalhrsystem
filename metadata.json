@@ -1,0 +1,8 @@
+{
+  "name": "Jenco HR System",
+  "description": "Premium HR & Attendance Management System with Geolocation and Intelligent Leave Calculation.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera"
+  ]
+}
