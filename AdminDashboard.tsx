@@ -38,6 +38,11 @@ export const AdminDashboard: React.FC<Props> = ({ view }) => {
 
   useEffect(() => {
     refreshData();
+    
+    // Listen for global updates (e.g. from Notification Quick Actions)
+    const handleDataUpdate = () => refreshData();
+    window.addEventListener('jenco-data-update', handleDataUpdate);
+    return () => window.removeEventListener('jenco-data-update', handleDataUpdate);
   }, [view]);
 
   const refreshData = () => {
@@ -71,7 +76,10 @@ export const AdminDashboard: React.FC<Props> = ({ view }) => {
     } else {
         await storageService.updateLeaveStatus(id, status);
     }
-    refreshData();
+    // No need to call refreshData explicitely if we trigger the event, but calling it here directly is faster
+    refreshData(); 
+    // Dispatch event to update other components like Notifications
+    window.dispatchEvent(new Event('jenco-data-update'));
   };
 
   const handleSubmitEmployee = (e: React.FormEvent) => {

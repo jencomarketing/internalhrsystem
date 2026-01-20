@@ -21,7 +21,15 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onLogout, curren
   useEffect(() => {
     loadNotifs();
     const interval = setInterval(loadNotifs, 5000); // Check every 5s
-    return () => clearInterval(interval);
+    
+    // Also listen for immediate updates
+    const handleDataUpdate = () => loadNotifs();
+    window.addEventListener('jenco-data-update', handleDataUpdate);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('jenco-data-update', handleDataUpdate);
+    };
   }, [user.id]);
 
   // Close dropdown when clicking outside
@@ -62,9 +70,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, onLogout, curren
       
       handleMarkRead(n.id); // Mark read after action
       
-      // If current view is approvals, force a refresh essentially by re-setting view or relying on internal polling of dashboard
-      // Since we can't easily force refresh child from here without context, navigating to Approvals is safest
-      onChangeView('approvals');
+      // Dispatch global event to refresh dashboards without navigation
+      window.dispatchEvent(new Event('jenco-data-update'));
   };
 
   const handleNotificationClick = (n: Notification) => {
