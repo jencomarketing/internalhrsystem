@@ -19,7 +19,7 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
     setError('');
     
     try {
-      const user = await storageService.login(username, password);
+      const user = await storageService.login(username, password || 'password');
       if (user) {
         onLogin(user);
       } else {
@@ -34,8 +34,8 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
 
   return (
     <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-4 relative overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+        {/* Stable background gradients */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
              <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[100px]"></div>
              <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-cyan-600/20 rounded-full blur-[100px]"></div>
         </div>
@@ -81,10 +81,6 @@ export const Login: React.FC<Props> = ({ onLogin }) => {
             {loading ? 'Authenticating...' : 'Secure Login'}
           </button>
         </form>
-
-        <div className="mt-6 text-center text-xs text-slate-600">
-          <p>Restricted Access. Authorized Personnel Only.</p>
-        </div>
       </div>
     </div>
   );
